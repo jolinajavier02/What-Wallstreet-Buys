@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import type { CSSProperties, ChangeEvent } from "react";
 import data from "../data/siteData.json";
 
@@ -58,6 +58,28 @@ type CanvasIcon = {
   size: number;
 };
 
+type EditorSnapshot = {
+  formatLabel: string;
+  backgroundColor: string;
+  accentColor: string;
+  textColor: string;
+  effect: string;
+  fontIndex: number;
+  fontSize: number;
+  opacity: number;
+  headline: string;
+  subhead: string;
+  ticker: string;
+  tickerChange: string;
+  caption: string;
+  selectedIcons: CanvasIcon[];
+  selectedIconId: number;
+  customIconText: string;
+  mediaUrl: string;
+  platforms: Record<string, boolean>;
+  publishWebsite: boolean;
+};
+
 export default function OwnerDashboard() {
   const [format, setFormat] = useState(canvasFormats[0]);
   const [backgroundColor, setBackgroundColor] = useState("#08110f");
@@ -72,18 +94,17 @@ export default function OwnerDashboard() {
   const [ticker, setTicker] = useState("NVDA");
   const [tickerChange, setTickerChange] = useState("+4.2%");
   const [caption, setCaption] = useState("NVDA keeps showing up in institutional accumulation data.\n\nKey signal: AI infrastructure demand is still pulling capital toward high-quality semiconductor names.");
-  const [selectedIcons, setSelectedIcons] = useState<CanvasIcon[]>([
-    { id: 1, icon: "📈", x: 78, y: 16, color: "#c7f35b", size: 34 },
-    { id: 2, icon: "💰", x: 10, y: 72, color: "#f59e0b", size: 30 },
-    { id: 3, icon: "AI", x: 72, y: 74, color: "#c7f35b", size: 28 },
-  ]);
-  const [selectedIconId, setSelectedIconId] = useState(1);
+  const [selectedIcons, setSelectedIcons] = useState<CanvasIcon[]>([]);
+  const [selectedIconId, setSelectedIconId] = useState(0);
+  const [customIconText, setCustomIconText] = useState("BUY");
   const [mediaUrl, setMediaUrl] = useState("");
   const [activeTab, setActiveTab] = useState("Design");
   const [zoom, setZoom] = useState(82);
   const [message, setMessage] = useState("Ready to create.");
   const [platforms, setPlatforms] = useState(() => Object.fromEntries(platformOptions.map(([, name, , checked]) => [name, checked])));
   const [publishWebsite, setPublishWebsite] = useState(true);
+  const undoHistory = useRef<EditorSnapshot[]>([]);
+  const redoHistory = useRef<EditorSnapshot[]>([]);
 
   const font = fontStyles[fontIndex];
   const canvasStyle = {
@@ -102,9 +123,83 @@ export default function OwnerDashboard() {
     return [publishWebsite ? "Website" : "", ...names].filter(Boolean);
   }, [platforms, publishWebsite]);
 
+  function getSnapshot(): EditorSnapshot {
+    return {
+      formatLabel: format.label,
+      backgroundColor,
+      accentColor,
+      textColor,
+      effect,
+      fontIndex,
+      fontSize,
+      opacity,
+      headline,
+      subhead,
+      ticker,
+      tickerChange,
+      caption,
+      selectedIcons: selectedIcons.map((item) => ({ ...item })),
+      selectedIconId,
+      customIconText,
+      mediaUrl,
+      platforms: { ...platforms },
+      publishWebsite,
+    };
+  }
+
+  function restoreSnapshot(snapshot: EditorSnapshot) {
+    setFormat(canvasFormats.find((item) => item.label === snapshot.formatLabel) ?? canvasFormats[0]);
+    setBackgroundColor(snapshot.backgroundColor);
+    setAccentColor(snapshot.accentColor);
+    setTextColor(snapshot.textColor);
+    setEffect(snapshot.effect);
+    setFontIndex(snapshot.fontIndex);
+    setFontSize(snapshot.fontSize);
+    setOpacity(snapshot.opacity);
+    setHeadline(snapshot.headline);
+    setSubhead(snapshot.subhead);
+    setTicker(snapshot.ticker);
+    setTickerChange(snapshot.tickerChange);
+    setCaption(snapshot.caption);
+    setSelectedIcons(snapshot.selectedIcons.map((item) => ({ ...item })));
+    setSelectedIconId(snapshot.selectedIconId);
+    setCustomIconText(snapshot.customIconText);
+    setMediaUrl(snapshot.mediaUrl);
+    setPlatforms({ ...snapshot.platforms });
+    setPublishWebsite(snapshot.publishWebsite);
+  }
+
+  function recordHistory() {
+    undoHistory.current = [...undoHistory.current.slice(-49), getSnapshot()];
+    redoHistory.current = [];
+  }
+
+  function undoEdit() {
+    const previous = undoHistory.current.pop();
+    if (!previous) {
+      setMessage("Nothing to undo.");
+      return;
+    }
+    redoHistory.current = [...redoHistory.current, getSnapshot()];
+    restoreSnapshot(previous);
+    setMessage("Undid last edit.");
+  }
+
+  function redoEdit() {
+    const next = redoHistory.current.pop();
+    if (!next) {
+      setMessage("Nothing to redo.");
+      return;
+    }
+    undoHistory.current = [...undoHistory.current, getSnapshot()];
+    restoreSnapshot(next);
+    setMessage("Redid last edit.");
+  }
+
   function handleMediaUpload(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     if (!file) return;
+    recordHistory();
     setMediaUrl(URL.createObjectURL(file));
     setMessage(`${file.name} added to the canvas.`);
   }
@@ -112,24 +207,29 @@ export default function OwnerDashboard() {
   const selectedIcon = selectedIcons.find((item) => item.id === selectedIconId);
 
   function addIcon(icon: string) {
+    const cleanIcon = icon.trim();
+    if (!cleanIcon) return;
+    recordHistory();
     const nextIcon = {
       id: Date.now(),
-      icon,
+      icon: cleanIcon,
       x: 18 + (selectedIcons.length % 4) * 18,
       y: 18 + (selectedIcons.length % 5) * 12,
       color: accentColor,
-      size: icon.length > 2 ? 24 : 32,
+      size: cleanIcon.length > 2 ? 24 : 32,
     };
     setSelectedIcons((current) => [...current, nextIcon]);
     setSelectedIconId(nextIcon.id);
-    setMessage(`${icon} added to the design.`);
+    setMessage(`${cleanIcon} added to the design.`);
   }
 
   function updateSelectedIcon(updates: Partial<CanvasIcon>) {
+    recordHistory();
     setSelectedIcons((current) => current.map((item) => item.id === selectedIconId ? { ...item, ...updates } : item));
   }
 
   function removeSelectedIcon() {
+    recordHistory();
     setSelectedIcons((current) => {
       const next = current.filter((item) => item.id !== selectedIconId);
       setSelectedIconId(next[0]?.id ?? 0);
@@ -139,6 +239,7 @@ export default function OwnerDashboard() {
   }
 
   function clearCanvas() {
+    recordHistory();
     setMediaUrl("");
     setSelectedIcons([]);
     setSelectedIconId(0);
@@ -171,7 +272,7 @@ export default function OwnerDashboard() {
         <div className="sidebar-user">
           <div className="owner-user-avatar">W</div>
           <div>
-            <div className="user-name">WWSB Owner</div>
+            <div className="user-name">WWSB</div>
             <div className="user-role">Publishing admin</div>
           </div>
         </div>
@@ -204,7 +305,10 @@ export default function OwnerDashboard() {
                   id="format"
                   className="form-select"
                   value={format.label}
-                  onChange={(event) => setFormat(canvasFormats.find((item) => item.label === event.target.value) ?? canvasFormats[0])}
+                  onChange={(event) => {
+                    recordHistory();
+                    setFormat(canvasFormats.find((item) => item.label === event.target.value) ?? canvasFormats[0]);
+                  }}
                 >
                   {canvasFormats.map((item) => <option key={item.label}>{item.label}</option>)}
                 </select>
@@ -213,12 +317,12 @@ export default function OwnerDashboard() {
               <div className="tool-group">
                 <span className="form-label">Background Color</span>
                 <div className="color-control">
-                  <input type="color" value={backgroundColor} onChange={(event) => setBackgroundColor(event.target.value)} />
-                  <input className="form-input" value={backgroundColor} onChange={(event) => setBackgroundColor(event.target.value)} />
+                  <input type="color" value={backgroundColor} onChange={(event) => { recordHistory(); setBackgroundColor(event.target.value); }} />
+                  <input className="form-input" value={backgroundColor} onChange={(event) => { recordHistory(); setBackgroundColor(event.target.value); }} />
                 </div>
                 <div className="swatch-grid">
                   {colorSwatches.map((color) => (
-                    <button className="color-swatch" style={{ background: color }} aria-label={`Use ${color} background`} key={color} onClick={() => setBackgroundColor(color)} />
+                    <button className="color-swatch" style={{ background: color }} aria-label={`Use ${color} background`} key={color} onClick={() => { recordHistory(); setBackgroundColor(color); }} />
                   ))}
                 </div>
               </div>
@@ -226,8 +330,8 @@ export default function OwnerDashboard() {
               <div className="tool-group">
                 <span className="form-label">Text & Accent Color</span>
                 <div className="two-color-row">
-                  <label><span>Text</span><input type="color" value={textColor} onChange={(event) => setTextColor(event.target.value)} /></label>
-                  <label><span>Accent</span><input type="color" value={accentColor} onChange={(event) => setAccentColor(event.target.value)} /></label>
+                  <label><span>Text</span><input type="color" value={textColor} onChange={(event) => { recordHistory(); setTextColor(event.target.value); }} /></label>
+                  <label><span>Accent</span><input type="color" value={accentColor} onChange={(event) => { recordHistory(); setAccentColor(event.target.value); }} /></label>
                 </div>
               </div>
 
@@ -235,19 +339,19 @@ export default function OwnerDashboard() {
                 <span className="form-label">Background Effect</span>
                 <div className="effect-grid">
                   {backgroundEffects.map((item) => (
-                    <button className={effect === item ? "active" : ""} key={item} onClick={() => setEffect(item)}>{item}</button>
+                    <button className={effect === item ? "active" : ""} key={item} onClick={() => { recordHistory(); setEffect(item); }}>{item}</button>
                   ))}
                 </div>
               </div>
 
               <div className="tool-group">
                 <label className="form-label" htmlFor="font-style">Font Style</label>
-                <select id="font-style" className="form-select" value={fontIndex} onChange={(event) => setFontIndex(Number(event.target.value))}>
+                <select id="font-style" className="form-select" value={fontIndex} onChange={(event) => { recordHistory(); setFontIndex(Number(event.target.value)); }}>
                   {fontStyles.map((item, index) => <option value={index} key={item.label}>{index + 1}. {item.label}</option>)}
                 </select>
                 <div className="range-row">
                   <label htmlFor="font-size">Size</label>
-                  <input id="font-size" type="range" min="24" max="88" value={fontSize} onChange={(event) => setFontSize(Number(event.target.value))} />
+                  <input id="font-size" type="range" min="24" max="88" value={fontSize} onChange={(event) => { recordHistory(); setFontSize(Number(event.target.value)); }} />
                 </div>
               </div>
 
@@ -258,12 +362,27 @@ export default function OwnerDashboard() {
                 </div>
               </div>
 
+              <div className="tool-group">
+                <label className="form-label" htmlFor="custom-icon-text">Add Text Badge</label>
+                <div className="text-badge-row">
+                  <input
+                    id="custom-icon-text"
+                    className="form-input"
+                    value={customIconText}
+                    maxLength={12}
+                    onChange={(event) => { recordHistory(); setCustomIconText(event.target.value.toUpperCase()); }}
+                    placeholder="BUY, SELL, EPS..."
+                  />
+                  <button className="btn btn-outline" onClick={() => addIcon(customIconText)}>Add</button>
+                </div>
+              </div>
+
               <div className="tool-group icon-editor">
                 <span className="form-label">Selected Icon</span>
                 {selectedIcon ? (
                   <>
                     <div className="selected-icon-preview">
-                      <span style={{ backgroundColor: selectedIcon.color, fontSize: selectedIcon.size * 0.62 }}>{selectedIcon.icon}</span>
+                      <span style={{ color: selectedIcon.color, fontSize: selectedIcon.size }}>{selectedIcon.icon}</span>
                       <button className="action-btn" onClick={removeSelectedIcon}>Remove</button>
                     </div>
                     <div className="range-row">
@@ -296,9 +415,9 @@ export default function OwnerDashboard() {
                   <span className="upload-text">Drop media or browse</span>
                   <span className="upload-sub">Images, clips, logos, charts</span>
                 </label>
-                <div className="range-row">
-                  <label htmlFor="media-opacity">Opacity</label>
-                  <input id="media-opacity" type="range" min="0" max="100" value={opacity} onChange={(event) => setOpacity(Number(event.target.value))} />
+                    <div className="range-row">
+                      <label htmlFor="media-opacity">Opacity</label>
+                  <input id="media-opacity" type="range" min="0" max="100" value={opacity} onChange={(event) => { recordHistory(); setOpacity(Number(event.target.value)); }} />
                 </div>
               </div>
 
@@ -315,8 +434,8 @@ export default function OwnerDashboard() {
                   ))}
                 </div>
                 <div className="canvas-actions">
-                  <button title="Undo" onClick={() => setMessage("Undo history will be added when persistence is connected.")}>↶</button>
-                  <button title="Redo" onClick={() => setMessage("Redo history will be added when persistence is connected.")}>↷</button>
+                  <button title="Undo" onClick={undoEdit}>↶</button>
+                  <button title="Redo" onClick={redoEdit}>↷</button>
                   <button title="Zoom out" onClick={() => setZoom((value) => Math.max(50, value - 10))}>−</button>
                   <span>{zoom}%</span>
                   <button title="Zoom in" onClick={() => setZoom((value) => Math.min(120, value + 10))}>+</button>
@@ -338,7 +457,7 @@ export default function OwnerDashboard() {
                         style={{
                           "--icon-x": `${item.x}%`,
                           "--icon-y": `${item.y}%`,
-                          "--icon-bg": item.color,
+                          "--icon-color": item.color,
                           "--icon-size": `${item.size}px`,
                         } as CSSProperties}
                         key={item.id}
@@ -359,7 +478,6 @@ export default function OwnerDashboard() {
                   </div>
                   <div className="canvas-chart">
                     <div className="chart-label">
-                      <strong>{ticker}</strong>
                       <span>{tickerChange}</span>
                     </div>
                     <span className="c1" />
@@ -381,22 +499,22 @@ export default function OwnerDashboard() {
 
               <div className="form-group">
                 <label className="form-label" htmlFor="post-title">Website Post Title</label>
-                <input id="post-title" className="form-input" type="text" value={headline} onChange={(event) => setHeadline(event.target.value)} />
+                <input id="post-title" className="form-input" type="text" value={headline} onChange={(event) => { recordHistory(); setHeadline(event.target.value); }} />
               </div>
 
               <div className="form-group">
                 <label className="form-label" htmlFor="canvas-subhead">Canvas Subtitle</label>
-                <textarea id="canvas-subhead" className="form-textarea compact-textarea" value={subhead} onChange={(event) => setSubhead(event.target.value)} />
+                <textarea id="canvas-subhead" className="form-textarea compact-textarea" value={subhead} onChange={(event) => { recordHistory(); setSubhead(event.target.value); }} />
               </div>
 
               <div className="form-group two-input-grid">
-                <label className="form-label" htmlFor="ticker-symbol">Ticker<input id="ticker-symbol" className="form-input" value={ticker} onChange={(event) => setTicker(event.target.value.toUpperCase())} /></label>
-                <label className="form-label" htmlFor="ticker-change">Change<input id="ticker-change" className="form-input" value={tickerChange} onChange={(event) => setTickerChange(event.target.value)} /></label>
+                <label className="form-label" htmlFor="ticker-symbol">Ticker<input id="ticker-symbol" className="form-input" value={ticker} onChange={(event) => { recordHistory(); setTicker(event.target.value.toUpperCase()); }} /></label>
+                <label className="form-label" htmlFor="ticker-change">Change<input id="ticker-change" className="form-input" value={tickerChange} onChange={(event) => { recordHistory(); setTickerChange(event.target.value); }} /></label>
               </div>
 
               <div className="form-group">
                 <label className="form-label" htmlFor="post-caption">Social Caption</label>
-                <textarea id="post-caption" className="form-textarea" value={caption} onChange={(event) => setCaption(event.target.value)} />
+                <textarea id="post-caption" className="form-textarea" value={caption} onChange={(event) => { recordHistory(); setCaption(event.target.value); }} />
               </div>
 
               <div className="form-group">
@@ -415,7 +533,7 @@ export default function OwnerDashboard() {
                 <span className="form-label">Publish Destinations</span>
                 <div className="publish-channel-list">
                   <label className="channel-check website-channel">
-                    <input type="checkbox" checked={publishWebsite} onChange={(event) => setPublishWebsite(event.target.checked)} />
+                    <input type="checkbox" checked={publishWebsite} onChange={(event) => { recordHistory(); setPublishWebsite(event.target.checked); }} />
                     <span className="channel-icon">W</span>
                     <span><strong>Website</strong><small>Public WWSB post</small></span>
                   </label>
@@ -424,7 +542,7 @@ export default function OwnerDashboard() {
                       <input
                         type="checkbox"
                         checked={platforms[name]}
-                        onChange={(event) => setPlatforms((current) => ({ ...current, [name]: event.target.checked }))}
+                        onChange={(event) => { recordHistory(); setPlatforms((current) => ({ ...current, [name]: event.target.checked })); }}
                       />
                       <span className="channel-icon">{icon}</span>
                       <span><strong>{name}</strong><small>Connected • {detail}</small></span>
