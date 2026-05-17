@@ -1,19 +1,23 @@
 import data from "../data/siteData.json";
 
 const navigation = [
-  { label: "Main", items: [["🏠", "Dashboard", "/owner", true], ["✏️", "Create Post", "#"], ["📋", "All Posts", "#"], ["📅", "Scheduled", "#"]] },
-  { label: "Platforms", items: [["📸", "Instagram", "#"], ["🐦", "X / Twitter", "#"], ["📘", "Facebook", "#"], ["💼", "LinkedIn", "#"], ["📝", "Medium", "#"], ["🟠", "Reddit", "#"]] },
-  { label: "Manage", items: [["👥", "Users", "#"], ["📊", "Analytics", "#"], ["⚙️", "Settings", "#"], ["👁️", "Preview as User", "/"]] },
+  { label: "Studio", items: [["✦", "Post Editor", "/owner", true], ["▣", "Templates", "#"], ["⌁", "Media Library", "#"], ["◷", "Scheduled", "#"]] },
+  { label: "Channels", items: [["◎", "Instagram", "#"], ["𝕏", "X / Twitter", "#"], ["f", "Facebook", "#"], ["in", "LinkedIn", "#"], ["M", "Medium", "#"], ["R", "Reddit", "#"]] },
+  { label: "Manage", items: [["◌", "Analytics", "#"], ["⚙", "Settings", "#"], ["↗", "Preview Website", "/"]] },
 ];
 
 const platformOptions = [
-  ["📸", "Instagram", true],
-  ["🐦", "X / Twitter", true],
-  ["📘", "Facebook", true],
-  ["💼", "LinkedIn", true],
-  ["📝", "Medium", false],
-  ["🟠", "Reddit", false],
+  ["◎", "Instagram", "Feed + Story", true],
+  ["𝕏", "X / Twitter", "Text + image", true],
+  ["f", "Facebook", "Page post", true],
+  ["in", "LinkedIn", "Company update", true],
+  ["M", "Medium", "Article draft", false],
+  ["R", "Reddit", "Community post", false],
 ] as const;
+
+const canvasFormats = ["Square 1080", "Story 9:16", "X 16:9", "LinkedIn 1200"];
+const iconSet = ["▲", "$", "%", "↗", "◆", "●", "★", "₿"];
+const colorSwatches = ["#08110f", "#12312a", "#c7f35b", "#f8faf5", "#1d4ed8", "#dc2626"];
 
 function statusClass(status: string) {
   return `status-badge status-${status.toLowerCase()}`;
@@ -21,11 +25,11 @@ function statusClass(status: string) {
 
 export default function OwnerDashboard() {
   return (
-    <div className="owner-dashboard">
-      <aside className="owner-sidebar">
+    <div className="owner-dashboard creator-dashboard">
+      <aside className="owner-sidebar creator-sidebar">
         <div className="sidebar-logo">
           <div className="brand">{data.brand}</div>
-          <span className="role-badge">Owner Account</span>
+          <span className="role-badge">Creator Studio</span>
         </div>
         <nav className="sidebar-nav">
           {navigation.map((section) => (
@@ -43,173 +47,229 @@ export default function OwnerDashboard() {
           <div className="owner-user-avatar">W</div>
           <div>
             <div className="user-name">WWSB Owner</div>
-            <div className="user-role">Administrator</div>
+            <div className="user-role">Publishing admin</div>
           </div>
         </div>
       </aside>
 
-      <div className="owner-main">
-        <header className="topbar">
-          <div className="topbar-title">Dashboard Overview</div>
+      <div className="owner-main creator-main">
+        <header className="topbar creator-topbar">
+          <div>
+            <div className="topbar-title">Post Editor</div>
+            <p className="topbar-subtitle">Create website posts and resize them for linked social media channels.</p>
+          </div>
           <div className="topbar-actions">
-            <button className="notification-btn" aria-label="Notifications">🔔<span className="notif-dot" /></button>
-            <a className="button-link" href="/"><button className="btn btn-outline">Preview Site</button></a>
-            <button className="btn btn-primary">+ Create Post</button>
+            <a className="button-link" href="/"><button className="btn btn-outline">Preview Website</button></a>
+            <button className="btn btn-outline">Save Draft</button>
+            <button className="btn btn-green">Publish</button>
           </div>
         </header>
 
-        <main className="page-content">
-          <section className="stats-row" aria-label="Dashboard stats">
-            <div className="stat-card">
-              <div className="stat-label">Total Posts</div>
-              <div className="stat-value">{data.stats.postsPublished}</div>
-              <div className="stat-change up">↑ 12 this month</div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-label">Total Followers</div>
-              <div className="stat-value">{data.stats.totalFollowers}</div>
-              <div className="stat-change up">↑ +3.2K this month</div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-label">Registered Users</div>
-              <div className="stat-value">{data.stats.registeredUsers}</div>
-              <div className="stat-change up">↑ +210 this week</div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-label">Scheduled Posts</div>
-              <div className="stat-value">{data.stats.scheduledPosts}</div>
-              <div className="stat-change">Next: Today 6:00 PM</div>
-            </div>
+        <main className="page-content creator-content">
+          <section className="creator-studio" aria-label="Post creator workspace">
+            <aside className="tool-panel">
+              <div className="tool-panel-header">
+                <strong>Design Tools</strong>
+                <span>Canvas controls</span>
+              </div>
+
+              <div className="tool-group">
+                <label className="form-label" htmlFor="format">Format</label>
+                <select id="format" className="form-select">
+                  {canvasFormats.map((format) => <option key={format}>{format}</option>)}
+                </select>
+              </div>
+
+              <div className="tool-group">
+                <span className="form-label">Background</span>
+                <div className="swatch-grid">
+                  {colorSwatches.map((color) => (
+                    <button className="color-swatch" style={{ background: color }} aria-label={`Use ${color} background`} key={color} />
+                  ))}
+                </div>
+              </div>
+
+              <div className="tool-group">
+                <span className="form-label">Text Style</span>
+                <div className="segmented-control">
+                  <button className="active">Bold</button>
+                  <button>Serif</button>
+                  <button>Mono</button>
+                </div>
+                <div className="range-row">
+                  <label htmlFor="font-size">Size</label>
+                  <input id="font-size" type="range" min="24" max="88" defaultValue="48" />
+                </div>
+              </div>
+
+              <div className="tool-group">
+                <span className="form-label">Icons</span>
+                <div className="icon-grid">
+                  {iconSet.map((icon) => <button key={icon}>{icon}</button>)}
+                </div>
+              </div>
+
+              <div className="tool-group">
+                <span className="form-label">Upload Image / Video</span>
+                <label className="upload-zone creator-upload">
+                  <input type="file" accept="image/*,video/*" />
+                  <span className="upload-icon">▧</span>
+                  <span className="upload-text">Drop media or browse</span>
+                  <span className="upload-sub">Images, clips, logos, charts</span>
+                </label>
+              </div>
+            </aside>
+
+            <section className="canvas-workspace">
+              <div className="canvas-toolbar">
+                <div className="canvas-tabs">
+                  <button className="active">Design</button>
+                  <button>Caption</button>
+                  <button>Preview</button>
+                </div>
+                <div className="canvas-actions">
+                  <button title="Undo">↶</button>
+                  <button title="Redo">↷</button>
+                  <button title="Zoom out">−</button>
+                  <span>82%</span>
+                  <button title="Zoom in">+</button>
+                </div>
+              </div>
+
+              <div className="canvas-stage">
+                <article className="social-canvas">
+                  <div className="canvas-bg-lines" />
+                  <div className="canvas-brand-row">
+                    <span className="canvas-logo">WWB</span>
+                    <span>WHAT WALLSTREET BUYS</span>
+                  </div>
+                  <div className="canvas-market-card">
+                    <span className="canvas-chip">Stock Analysis</span>
+                    <h1>NVDA Is Still Wall Street's Favorite AI Trade</h1>
+                    <p>Institutional flow remains positive as data center demand keeps accelerating.</p>
+                    <div className="canvas-ticker-row">
+                      <strong>NVDA</strong>
+                      <span>+4.2%</span>
+                    </div>
+                  </div>
+                  <div className="canvas-chart">
+                    <span className="c1" />
+                    <span className="c2" />
+                    <span className="c3" />
+                    <span className="c4" />
+                    <span className="c5" />
+                  </div>
+                  <div className="canvas-footer">Not financial advice • Follow for market intelligence</div>
+                </article>
+              </div>
+            </section>
+
+            <aside className="publish-panel">
+              <div className="tool-panel-header">
+                <strong>Post Setup</strong>
+                <span>Website + social channels</span>
+              </div>
+
+              <div className="form-group">
+                <label className="form-label" htmlFor="post-title">Website Post Title</label>
+                <input id="post-title" className="form-input" type="text" defaultValue="Why NVIDIA Is Wall Street's Undisputed Top Pick Right Now" />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label" htmlFor="post-caption">Social Caption</label>
+                <textarea id="post-caption" className="form-textarea" defaultValue={"NVDA keeps showing up in institutional accumulation data.\n\nKey signal: AI infrastructure demand is still pulling capital toward high-quality semiconductor names."} />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label" htmlFor="post-category">Website Category</label>
+                <select id="post-category" className="form-select">
+                  <option>Stock Insight</option>
+                  <option>Earnings Update</option>
+                  <option>Insider Trading</option>
+                  <option>Dividend Alert</option>
+                  <option>Market News</option>
+                  <option>Long-form Article</option>
+                </select>
+              </div>
+
+              <div className="form-group">
+                <span className="form-label">Publish To</span>
+                <div className="publish-channel-list">
+                  <label className="channel-check website-channel">
+                    <input type="checkbox" defaultChecked />
+                    <span className="channel-icon">W</span>
+                    <span><strong>Website</strong><small>Public WWSB post</small></span>
+                  </label>
+                  {platformOptions.map(([icon, name, detail, checked]) => (
+                    <label className="channel-check" key={name}>
+                      <input type="checkbox" defaultChecked={checked} />
+                      <span className="channel-icon">{icon}</span>
+                      <span><strong>{name}</strong><small>{detail}</small></span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label className="form-label" htmlFor="publish-time">Schedule</label>
+                <input id="publish-time" className="form-input" type="datetime-local" />
+              </div>
+
+              <div className="publish-actions stacked">
+                <button className="btn btn-outline">Export PNG</button>
+                <button className="btn btn-outline">Schedule Post</button>
+                <button className="btn btn-green">Publish Website + Social</button>
+              </div>
+            </aside>
           </section>
 
-          <section className="three-col">
+          <section className="creator-bottom-grid">
             <div className="panel">
               <div className="panel-header">
-                <span className="panel-title">✏️ Create & Publish Post</span>
-                <span className="panel-note">Publishes to website + selected platforms</span>
+                <span className="panel-title">Linked Social Accounts</span>
+                <button className="btn btn-outline">Connect Account</button>
               </div>
-              <div className="panel-body">
-                <div className="form-group">
-                  <label className="form-label" htmlFor="post-title">Post Title</label>
-                  <input id="post-title" className="form-input" type="text" placeholder="e.g. Why NVDA is Wall Street's Top Pick This Week" />
-                </div>
-                <div className="form-group">
-                  <label className="form-label" htmlFor="post-content">Content / Caption</label>
-                  <textarea id="post-content" className="form-textarea" placeholder="Write your financial insight, stock analysis, or market update here..." />
-                </div>
-                <div className="form-group">
-                  <label className="form-label" htmlFor="post-category">Category</label>
-                  <select id="post-category" className="form-select">
-                    <option>Stock Insight</option>
-                    <option>Earnings Update</option>
-                    <option>Insider Trading</option>
-                    <option>Dividend Alert</option>
-                    <option>Market News</option>
-                    <option>Long-form Article</option>
-                  </select>
-                </div>
-                <div className="form-group">
-                  <span className="form-label">Upload Media</span>
-                  <button className="upload-zone">
-                    <span className="upload-icon">📎</span>
-                    <span className="upload-text">Click to upload or drag & drop</span>
-                    <span className="upload-sub">PNG, JPG, MP4 - Max 50MB</span>
-                  </button>
-                </div>
-                <div className="form-group">
-                  <span className="form-label">Publish To Platforms</span>
-                  <div className="platform-grid">
-                    {platformOptions.map(([icon, name, checked]) => (
-                      <label className="platform-check" key={name}>
-                        <input type="checkbox" defaultChecked={checked} />
-                        <span className="plat-icon">{icon}</span>
-                        <span className="plat-name">{name}</span>
-                      </label>
-                    ))}
+              <div className="social-account-grid">
+                {platformOptions.slice(0, 6).map(([icon, name, detail, checked]) => (
+                  <div className="social-account-card" key={name}>
+                    <span className="channel-icon">{icon}</span>
+                    <div>
+                      <strong>{name}</strong>
+                      <small>{checked ? "Connected" : "Not connected"} • {detail}</small>
+                    </div>
+                    <button className="action-btn">{checked ? "Manage" : "Link"}</button>
                   </div>
-                </div>
-                <div className="publish-actions">
-                  <button className="btn btn-outline">Save as Draft</button>
-                  <button className="btn btn-outline">⏰ Schedule</button>
-                  <button className="btn btn-green">🚀 Publish Now</button>
-                </div>
+                ))}
               </div>
             </div>
 
-            <div className="dashboard-side">
-              <div className="panel">
-                <div className="panel-header">
-                  <span className="panel-title">📊 Platform Reach</span>
-                </div>
-                <div className="panel-body">
-                  <div className="analytics-row">
-                    {data.platformReach.map((platform) => (
-                      <div className="analytics-item" key={platform.name}>
-                        <span className="analytics-platform">{platform.icon}</span>
-                        <div className="analytics-info">
-                          <div className="analytics-name">{platform.name}</div>
-                          <div className="analytics-track"><div className="analytics-fill" style={{ width: `${platform.percent}%` }} /></div>
-                        </div>
-                        <span className="analytics-count">{platform.count}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+            <div className="panel">
+              <div className="panel-header">
+                <span className="panel-title">Recent Website Posts</span>
+                <button className="btn btn-outline">View All</button>
               </div>
-
-              <div className="panel">
-                <div className="panel-header">
-                  <span className="panel-title">📅 Upcoming Scheduled</span>
-                </div>
-                <div className="panel-body">
-                  <div className="schedule-list">
-                    {data.schedule.map((item) => (
-                      <div className="schedule-item" key={item.title}>
-                        <span className="schedule-time">{item.time}</span>
-                        <span className="schedule-title">{item.title}</span>
-                        <div className="schedule-platforms">{item.platforms}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section className="panel">
-            <div className="panel-header">
-              <span className="panel-title">📋 Recent Posts</span>
-              <button className="btn btn-outline">View All Posts</button>
-            </div>
-            <div className="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Title</th>
-                    <th>Category</th>
-                    <th>Platforms</th>
-                    <th>Status</th>
-                    <th>Date</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.posts.map((post) => (
-                    <tr key={post.title}>
-                      <td><strong>{post.shortTitle}</strong></td>
-                      <td>{post.category}</td>
-                      <td>
-                        <div className="platform-tags">
-                          {post.platformLabels.map((platform) => <span className="platform-tag" key={platform}>{platform}</span>)}
-                        </div>
-                      </td>
-                      <td><span className={statusClass(post.status)}>{post.status}</span></td>
-                      <td>{post.status === "Draft" ? "—" : post.date}</td>
-                      <td><button className="action-btn">Edit</button></td>
+              <div className="table-wrap compact-table">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Title</th>
+                      <th>Status</th>
+                      <th>Date</th>
+                      <th>Action</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {data.posts.slice(0, 4).map((post) => (
+                      <tr key={post.title}>
+                        <td><strong>{post.shortTitle}</strong></td>
+                        <td><span className={statusClass(post.status)}>{post.status}</span></td>
+                        <td>{post.status === "Draft" ? "—" : post.date}</td>
+                        <td><button className="action-btn">Edit</button></td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </section>
         </main>
