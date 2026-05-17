@@ -263,7 +263,7 @@ export default function OwnerDashboard() {
                 {selectedIcon ? (
                   <>
                     <div className="selected-icon-preview">
-                      <span style={{ color: selectedIcon.color, fontSize: selectedIcon.size }}>{selectedIcon.icon}</span>
+                      <span style={{ backgroundColor: selectedIcon.color, fontSize: selectedIcon.size * 0.62 }}>{selectedIcon.icon}</span>
                       <button className="action-btn" onClick={removeSelectedIcon}>Remove</button>
                     </div>
                     <div className="range-row">
@@ -338,7 +338,7 @@ export default function OwnerDashboard() {
                         style={{
                           "--icon-x": `${item.x}%`,
                           "--icon-y": `${item.y}%`,
-                          "--icon-color": item.color,
+                          "--icon-bg": item.color,
                           "--icon-size": `${item.size}px`,
                         } as CSSProperties}
                         key={item.id}
@@ -355,10 +355,13 @@ export default function OwnerDashboard() {
                     <p>{subhead}</p>
                     <div className="canvas-ticker-row">
                       <strong>{ticker}</strong>
-                      <span>{tickerChange}</span>
                     </div>
                   </div>
                   <div className="canvas-chart">
+                    <div className="chart-label">
+                      <strong>{ticker}</strong>
+                      <span>{tickerChange}</span>
+                    </div>
                     <span className="c1" />
                     <span className="c2" />
                     <span className="c3" />

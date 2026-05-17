@@ -2143,10 +2143,14 @@ tr:hover td {
 
 .selected-icon-preview span {
   display: inline-flex;
-  min-width: 54px;
+  width: 54px;
+  height: 54px;
+  border-radius: 999px;
   align-items: center;
   justify-content: center;
   font-weight: 900;
+  color: #08110f;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.38);
 }
 
 .empty-tool-note {
@@ -2376,7 +2380,7 @@ tr:hover td {
   max-width: 390px;
   margin-bottom: 12px;
   font-family: var(--headline-font);
-  font-size: var(--headline-size);
+  font-size: min(var(--headline-size), 46px);
   font-weight: var(--headline-weight);
   line-height: 0.98;
   letter-spacing: 0;
@@ -2394,18 +2398,10 @@ tr:hover td {
   margin-top: 20px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
 }
 
 .canvas-ticker-row strong {
   font-size: 30px;
-}
-
-.canvas-ticker-row span {
-  color: var(--accent);
-  font-size: 24px;
-  font-weight: 900;
 }
 
 .canvas-chart {
@@ -2417,11 +2413,35 @@ tr:hover td {
   grid-template-columns: repeat(5, 1fr);
   align-items: end;
   gap: 12px;
+  padding-top: 34px;
 }
 
-.canvas-chart span {
+.canvas-chart > span {
   border-radius: 5px 5px 0 0;
   background: linear-gradient(180deg, var(--accent), #16a34a);
+}
+
+.chart-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--canvas-text);
+}
+
+.chart-label strong {
+  font-size: 15px;
+  letter-spacing: 0.8px;
+}
+
+.chart-label span {
+  color: var(--accent);
+  font-size: 22px;
+  font-weight: 900;
 }
 
 .floating-icons {
@@ -2434,28 +2454,31 @@ tr:hover td {
   position: absolute;
   left: var(--icon-x);
   top: var(--icon-y);
-  width: auto;
-  min-width: calc(var(--icon-size) + 14px);
-  min-height: calc(var(--icon-size) + 14px);
-  padding: 5px 7px;
-  border: 1px solid transparent;
-  border-radius: 10px;
-  background: rgba(8, 17, 15, 0.08);
-  color: var(--icon-color);
+  width: calc(var(--icon-size) + 18px);
+  height: calc(var(--icon-size) + 18px);
+  padding: 0;
+  border: 2px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  background: var(--icon-bg);
+  color: #08110f;
   opacity: 0.95;
-  font-size: var(--icon-size);
+  font-size: calc(var(--icon-size) * 0.62);
   font-weight: 900;
   line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   text-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
   transform: translate(-50%, -50%);
   pointer-events: auto;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.2);
+  transition: width 0.12s ease, height 0.12s ease, font-size 0.12s ease, box-shadow 0.12s ease;
 }
 
 .floating-icons button:hover,
 .floating-icons button.selected {
   border-color: var(--accent);
-  background: rgba(255, 255, 255, 0.12);
-  box-shadow: 0 0 0 2px rgba(199, 243, 91, 0.18);
+  box-shadow: 0 0 0 3px rgba(199, 243, 91, 0.22), 0 14px 34px rgba(0, 0, 0, 0.2);
 }
 
 .canvas-chart .c1 { height: 36%; }
@@ -2471,6 +2494,108 @@ tr:hover td {
   color: rgba(255, 255, 255, 0.55);
   font-size: 12px;
   font-weight: 700;
+}
+
+.social-canvas.format-story .canvas-brand-row {
+  top: 22px;
+  left: 22px;
+  right: 22px;
+}
+
+.social-canvas.format-story .canvas-market-card {
+  top: 96px;
+  left: 22px;
+  right: 22px;
+  padding: 20px;
+}
+
+.social-canvas.format-story .canvas-market-card h1 {
+  font-size: min(var(--headline-size), 38px);
+  line-height: 1.02;
+}
+
+.social-canvas.format-story .canvas-market-card p {
+  font-size: 14px;
+}
+
+.social-canvas.format-story .canvas-chart {
+  left: 22px;
+  right: 22px;
+  bottom: 68px;
+  height: 128px;
+}
+
+.social-canvas.format-story .canvas-footer {
+  left: 22px;
+  right: 22px;
+  bottom: 28px;
+}
+
+.social-canvas.format-wide .canvas-brand-row,
+.social-canvas.format-linkedin .canvas-brand-row {
+  top: 18px;
+  left: 24px;
+  right: 24px;
+}
+
+.social-canvas.format-wide .canvas-market-card,
+.social-canvas.format-linkedin .canvas-market-card {
+  top: 68px;
+  left: 24px;
+  right: auto;
+  width: 54%;
+  padding: 16px;
+}
+
+.social-canvas.format-wide .canvas-chip,
+.social-canvas.format-linkedin .canvas-chip {
+  margin-bottom: 8px;
+  padding: 4px 8px;
+  font-size: 9px;
+}
+
+.social-canvas.format-wide .canvas-market-card h1,
+.social-canvas.format-linkedin .canvas-market-card h1 {
+  max-width: 100%;
+  margin-bottom: 8px;
+  font-size: min(var(--headline-size), 27px);
+  line-height: 1.03;
+}
+
+.social-canvas.format-wide .canvas-market-card p,
+.social-canvas.format-linkedin .canvas-market-card p {
+  max-width: 100%;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.social-canvas.format-wide .canvas-ticker-row strong,
+.social-canvas.format-linkedin .canvas-ticker-row strong {
+  font-size: 22px;
+}
+
+.social-canvas.format-wide .canvas-chart,
+.social-canvas.format-linkedin .canvas-chart {
+  left: auto;
+  right: 24px;
+  bottom: 48px;
+  width: 34%;
+  height: 118px;
+  gap: 8px;
+  padding-top: 30px;
+}
+
+.social-canvas.format-wide .chart-label span,
+.social-canvas.format-linkedin .chart-label span {
+  font-size: 18px;
+}
+
+.social-canvas.format-wide .canvas-footer,
+.social-canvas.format-linkedin .canvas-footer {
+  left: 24px;
+  right: 24px;
+  bottom: 18px;
+  font-size: 10px;
 }
 
 .publish-channel-list {
