@@ -6,6 +6,68 @@
     "registeredUsers": "1,840",
     "scheduledPosts": "7"
   },
+  "marketPulse": [
+    { "label": "S&P 500", "value": "6,142.38", "change": "+0.84%", "direction": "up" },
+    { "label": "Nasdaq", "value": "21,806.17", "change": "+1.26%", "direction": "up" },
+    { "label": "Dow", "value": "44,291.05", "change": "-0.18%", "direction": "down" },
+    { "label": "VIX", "value": "14.92", "change": "-3.10%", "direction": "up" }
+  ],
+  "stockAnalysis": [
+    {
+      "symbol": "NVDA",
+      "company": "NVIDIA Corp.",
+      "price": "$1,186.40",
+      "change": "+4.2%",
+      "direction": "up",
+      "rating": "Strong Buy",
+      "score": 94,
+      "institutionalFlow": "$3.8B",
+      "signal": "AI demand and data center revenue continue to attract heavy institutional accumulation.",
+      "metrics": [
+        { "label": "Growth", "value": 96 },
+        { "label": "Momentum", "value": 91 },
+        { "label": "Quality", "value": 88 }
+      ]
+    },
+    {
+      "symbol": "MSFT",
+      "company": "Microsoft Corp.",
+      "price": "$486.12",
+      "change": "+1.6%",
+      "direction": "up",
+      "rating": "Buy",
+      "score": 88,
+      "institutionalFlow": "$1.9B",
+      "signal": "Cloud margins, AI attach rates, and recurring enterprise revenue keep the setup constructive.",
+      "metrics": [
+        { "label": "Growth", "value": 84 },
+        { "label": "Momentum", "value": 79 },
+        { "label": "Quality", "value": 95 }
+      ]
+    },
+    {
+      "symbol": "TSLA",
+      "company": "Tesla Inc.",
+      "price": "$181.74",
+      "change": "-2.8%",
+      "direction": "down",
+      "rating": "Watchlist",
+      "score": 61,
+      "institutionalFlow": "-$620M",
+      "signal": "Margin pressure and delivery volatility make the risk/reward more tactical than core.",
+      "metrics": [
+        { "label": "Growth", "value": 72 },
+        { "label": "Momentum", "value": 48 },
+        { "label": "Quality", "value": 63 }
+      ]
+    }
+  ],
+  "sectors": [
+    { "name": "Semiconductors", "flow": "+$5.4B", "strength": 92 },
+    { "name": "Cloud Software", "flow": "+$2.8B", "strength": 81 },
+    { "name": "Mega-cap Retail", "flow": "+$1.6B", "strength": 74 },
+    { "name": "EV / Energy", "flow": "-$840M", "strength": 42 }
+  ],
   "socialLinks": [
     { "name": "Instagram", "icon": "📸", "label": "@what.wallstreet.buys", "url": "https://www.instagram.com/what.wallstreet.buys/" },
     { "name": "X / Twitter", "icon": "🐦", "label": "Daily market takes", "url": "#" },
