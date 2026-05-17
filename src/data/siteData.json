@@ -1,0 +1,128 @@
+{
+  "brand": "What-Wallstreet-Buys",
+  "stats": {
+    "postsPublished": "124",
+    "totalFollowers": "52.4K",
+    "registeredUsers": "1,840",
+    "scheduledPosts": "7"
+  },
+  "socialLinks": [
+    { "name": "Instagram", "icon": "📸", "label": "@what.wallstreet.buys", "url": "https://www.instagram.com/what.wallstreet.buys/" },
+    { "name": "X / Twitter", "icon": "🐦", "label": "Daily market takes", "url": "#" },
+    { "name": "Facebook", "icon": "📘", "label": "Finance community", "url": "#" },
+    { "name": "LinkedIn", "icon": "💼", "label": "Professional insights", "url": "#" },
+    { "name": "Medium", "icon": "📝", "label": "Long-form articles", "url": "#" },
+    { "name": "Reddit", "icon": "🟠", "label": "Stock discussions", "url": "#" }
+  ],
+  "posts": [
+    {
+      "title": "Why NVIDIA Is Wall Street's Undisputed Top Pick Right Now",
+      "shortTitle": "Why NVDA Is Wall Street's Top Pick",
+      "category": "Stock Insight",
+      "categoryKey": "stock",
+      "date": "May 17, 2026",
+      "imageIcon": "📈",
+      "excerpt": "Institutional ownership of NVIDIA has surged to record levels in Q2 2026. Here's why the smart money keeps piling in and what the snowflake chart is telling us about NVDA's outlook across Value, Growth, Health, and Dividend dimensions.",
+      "platforms": ["📸", "🐦", "📘", "💼"],
+      "platformLabels": ["📸 IG", "🐦 X", "📘 FB", "💼 LI"],
+      "likes": 284,
+      "comments": 41,
+      "status": "Published",
+      "stocks": [
+        { "symbol": "NVDA", "change": "+4.2%", "direction": "up" },
+        { "symbol": "AMD", "change": "+1.8%", "direction": "up" },
+        { "symbol": "INTC", "change": "", "direction": "flat" }
+      ]
+    },
+    {
+      "title": "Big Money Is Quietly Buying These 5 Stocks - Here's the Data",
+      "shortTitle": "Big Money Buying These 5 Stocks",
+      "category": "Insider Trading",
+      "categoryKey": "insider",
+      "date": "May 15, 2026",
+      "imageIcon": "🏦",
+      "excerpt": "SEC filings from the past 30 days reveal heavy institutional accumulation in sectors that retail investors have been avoiding. We break down each position and explain what the insiders might be seeing that others aren't.",
+      "platforms": ["📸", "📝"],
+      "platformLabels": ["📸 IG", "📝 Med"],
+      "likes": 197,
+      "comments": 33,
+      "status": "Published",
+      "stocks": [
+        { "symbol": "AMZN", "change": "+9.7%", "direction": "up" },
+        { "symbol": "META", "change": "+21.3%", "direction": "up" },
+        { "symbol": "TSLA", "change": "-8.2%", "direction": "down" }
+      ]
+    },
+    {
+      "title": "The Top 7 Dividend Stocks Wall Street Keeps Accumulating in 2026",
+      "shortTitle": "Top 7 Dividend Stocks in 2026",
+      "category": "Dividends",
+      "categoryKey": "dividends",
+      "date": "May 12, 2026",
+      "imageIcon": "💰",
+      "excerpt": "Income-focused institutions have been steadily increasing their holdings in these dividend growers. Each stock shows rising institutional ownership, strong payout ratios, and consistent earnings - a rare combination in today's environment.",
+      "platforms": ["📘", "💼", "🟠"],
+      "platformLabels": ["📘 FB", "💼 LI", "🟠 RD"],
+      "likes": 312,
+      "comments": 58,
+      "status": "Published",
+      "stocks": [
+        { "symbol": "JNJ", "change": "+2.1%", "direction": "up" },
+        { "symbol": "ABBV", "change": "+3.4%", "direction": "up" },
+        { "symbol": "KO", "change": "+1.2%", "direction": "up" }
+      ]
+    },
+    {
+      "title": "Apple Q2 Earnings: What the Numbers Say vs. What Wall Street Expects",
+      "shortTitle": "AAPL Q2 Earnings Deep Dive",
+      "category": "Earnings",
+      "categoryKey": "earnings",
+      "date": "May 9, 2026",
+      "imageIcon": "📊",
+      "excerpt": "We dig into Apple's upcoming Q2 report - revenue guidance, Services growth acceleration, India manufacturing ramp-up, and why analysts are split on whether this is a buy-the-earnings or sell-the-news setup.",
+      "platforms": ["📸", "🐦", "📘", "💼", "📝", "🟠"],
+      "platformLabels": ["All Platforms"],
+      "likes": 445,
+      "comments": 72,
+      "status": "Draft",
+      "stocks": [
+        { "symbol": "AAPL", "change": "+1.8%", "direction": "up" }
+      ]
+    },
+    {
+      "title": "Market Outlook: June 2026",
+      "shortTitle": "Market Outlook: June 2026",
+      "category": "Market News",
+      "categoryKey": "market",
+      "date": "May 20, 2026",
+      "imageIcon": "🌍",
+      "excerpt": "A forward look at sector rotation, institutional flows, and the market signals that matter most heading into June.",
+      "platforms": ["📝", "💼"],
+      "platformLabels": ["📝 Med", "💼 LI"],
+      "likes": 0,
+      "comments": 0,
+      "status": "Scheduled",
+      "stocks": []
+    }
+  ],
+  "trending": [
+    { "symbol": "NVDA", "sector": "AI Semiconductors", "change": "+38.4%", "direction": "up" },
+    { "symbol": "META", "sector": "Social / AR", "change": "+21.3%", "direction": "up" },
+    { "symbol": "MSFT", "sector": "Cloud / AI", "change": "+12.6%", "direction": "up" },
+    { "symbol": "AMZN", "sector": "E-Commerce", "change": "+9.7%", "direction": "up" },
+    { "symbol": "TSLA", "sector": "EV / Energy", "change": "-8.2%", "direction": "down" }
+  ],
+  "platformReach": [
+    { "name": "Instagram", "icon": "📸", "count": "22.1K", "percent": 82 },
+    { "name": "Facebook", "icon": "📘", "count": "12.5K", "percent": 60 },
+    { "name": "X / Twitter", "icon": "🐦", "count": "8.9K", "percent": 48 },
+    { "name": "LinkedIn", "icon": "💼", "count": "5.4K", "percent": 35 },
+    { "name": "Medium", "icon": "📝", "count": "2.2K", "percent": 20 },
+    { "name": "Reddit", "icon": "🟠", "count": "1.3K", "percent": 15 }
+  ],
+  "schedule": [
+    { "time": "Today 6PM", "title": "NVDA Earnings Preview", "platforms": "📸🐦📘" },
+    { "time": "Mon 9AM", "title": "Weekly Market Wrap", "platforms": "💼📝🟠" },
+    { "time": "Tue 8AM", "title": "Top 5 Dividend Picks", "platforms": "📸📘" }
+  ]
+}
